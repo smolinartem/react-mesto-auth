@@ -56,10 +56,6 @@
 @import url('./blocks/popup/__caption/popup__caption.css');
 @import url('./blocks/popup/_picture/popup_picture.css');
 
-.email {
-  color: white;
-}
-
 .authorization {
   display: flex;
   align-items: center;
@@ -75,9 +71,19 @@
   font-size: 24px;
   line-height: normal;
 }
+@media screen and (max-width: 410px) {
+  .authorization__title {
+    font-size: 20px;
+  }
+}
 
 .authorization__form {
   width: 358px;
+}
+@media screen and (max-width: 410px) {
+  .authorization__form {
+    width: 282px;
+  }
 }
 
 .authorization__input {
@@ -120,6 +126,13 @@
   border-radius: 2px;
   background: #fff;
 }
+@media screen and (max-width: 410px) {
+  .authorization__submit {
+    margin-top: 120px;
+    width: 282px;
+    font-size: 16px;
+  }
+}
 
 .authorization__signin {
   margin-top: 15px;
@@ -129,10 +142,14 @@
   font-weight: 400;
   line-height: normal;
 }
+@media screen and (max-width: 410px) {
+  .authorization__signin {
+    margin-top: 20px;
+  }
+}
 
 .header__email {
-  margin-right: 24px;
-
+  display: block;
   color: #fff;
   text-align: right;
   font-size: 18px;
@@ -153,9 +170,47 @@
   cursor: pointer;
 }
 
-.heander__nav {
+.header__nav {
   display: flex;
   align-items: center;
+  gap: 24px;
+}
+@media screen and (max-width: 460px) {
+  .header__nav {
+    display: none;
+  }
+}
+
+.header__menu {
+  padding: 40px 0 40px;
+
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+}
+
+.header__burger {
+  display: none;
+  border: none;
+  padding: 0;
+  background-color: transparent;
+  cursor: pointer;
+
+  width: 24px;
+  height: 24px;
+
+  background-size: 24px 18px;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  transition: all 0.4s ease-in;
+}
+
+@media screen and (max-width: 460px) {
+  .header__burger {
+    display: block;
+  }
 }
 
 .header__auth {
@@ -165,6 +220,11 @@
   font-weight: 400;
   line-height: 22px;
   text-decoration: none;
+}
+@media screen and (max-width: 400px) {
+  .header__auth {
+    font-size: 14px;
+  }
 }
 
 .auth__img {
@@ -179,4 +239,9 @@
   font-weight: 900;
   font-size: 24px;
   text-align: center;
+}
+@media screen and (max-width: 540px) {
+  .auth__title {
+    font-size: 20px;
+  }
 }

@@ -1,5 +1,8 @@
+import { useState } from 'react'
 import headerLogo from '../images/svg/logo.svg'
 import { Routes, Route, Link, useNavigate } from 'react-router-dom'
+import burger from '../images/svg/burger.svg'
+import close from '../images/svg/burger-close.svg'
 
 function Header({ email, loggedIn, handleLogout }) {
   const navigate = useNavigate()
@@ -8,39 +11,65 @@ function Header({ email, loggedIn, handleLogout }) {
     localStorage.removeItem('token')
     handleLogout()
     navigate('/sign-in', { replace: true })
+    setBurgerOpen(true)
   }
+
+  const [burgerOpen, setBurgerOpen] = useState(true)
+  function handleBurgerClick() {
+    setBurgerOpen((prev) => !prev)
+  }
+
   return (
-    <header className="header">
-      <a className="header__link" href="#!">
-        <img className="header__logo" src={headerLogo} alt="Логотип сайта." />
-      </a>
-      <Routes>
-        <Route
-          path="/sign-up"
-          element={
-            <Link className="header__auth hover" to="/sign-in">
-              Войти
-            </Link>
-          }
-        />
-        <Route
-          path="/sign-in"
-          element={
-            <Link className="header__auth hover" to="/sign-up">
-              Регистрация
-            </Link>
-          }
-        />
-      </Routes>
+    <>
       {loggedIn && (
-        <nav className="heander__nav">
-          <div className="header__email">{email}</div>
+        <nav style={{ display: burgerOpen ? 'none' : 'flex' }} className="header__menu">
+          <span className="header__email">{email}</span>
           <button className="header__signout hover" onClick={handleExit}>
             Выйти
           </button>
         </nav>
       )}
-    </header>
+      <header className="header">
+        <a className="header__link" href="#!">
+          <img className="header__logo" src={headerLogo} alt="Логотип сайта." />
+        </a>
+        <Routes>
+          <Route
+            path="/sign-up"
+            element={
+              <Link className="header__auth hover" to="/sign-in">
+                Войти
+              </Link>
+            }
+          />
+          <Route
+            path="/sign-in"
+            element={
+              <Link className="header__auth hover" to="/sign-up">
+                Регистрация
+              </Link>
+            }
+          />
+        </Routes>
+        {loggedIn && (
+          <>
+            <nav className="header__nav">
+              <span className="header__email">{email}</span>
+              <button className="header__signout hover" onClick={handleExit}>
+                Выйти
+              </button>
+            </nav>
+            <button
+              style={
+                burgerOpen ? { backgroundImage: `url(${burger})` } : { backgroundImage: `url(${close})` }
+              }
+              onClick={handleBurgerClick}
+              className="header__burger hover"
+            />
+          </>
+        )}
+      </header>
+    </>
   )
 }
 
