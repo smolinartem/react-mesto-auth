@@ -56,9 +56,127 @@
 @import url('./blocks/popup/__caption/popup__caption.css');
 @import url('./blocks/popup/_picture/popup_picture.css');
 
-/* .gallery__content {
-  position: relative;
-  cursor: pointer;
+.email {
+  color: white;
+}
+
+.authorization {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.authorization__title {
+  margin: 0;
+  padding-top: 60px;
+  padding-bottom: 50px;
+  color: #fff;
+  text-align: center;
+  font-size: 24px;
+  line-height: normal;
+}
+
+.authorization__form {
+  width: 358px;
+}
+
+.authorization__input {
+  color: #ccc;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+
+  padding-bottom: 10px;
+  padding-top: 12px;
+  border: 0;
   width: 100%;
-  padding-top: 100%;
-} */
+  box-sizing: border-box;
+  border-bottom: 1px solid #ccc;
+  background-color: transparent;
+}
+
+.authorization__error {
+  min-height: 30px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  color: #ff0000;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.authorization__submit {
+  margin-top: 216px;
+
+  color: #000;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: normal;
+  cursor: pointer;
+
+  width: 358px;
+  height: 50px;
+  border-radius: 2px;
+  background: #fff;
+}
+
+.authorization__signin {
+  margin-top: 15px;
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.header__email {
+  margin-right: 24px;
+
+  color: #fff;
+  text-align: right;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 22px;
+}
+
+.header__signout {
+  color: #a9a9a9;
+  text-align: right;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 22px;
+
+  border: none;
+  padding: 0;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.heander__nav {
+  display: flex;
+  align-items: center;
+}
+
+.header__auth {
+  color: #fff;
+  text-align: right;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 22px;
+  text-decoration: none;
+}
+
+.auth__img {
+  margin: 26px auto 32px;
+}
+
+.auth__title {
+  margin: 0;
+  margin-bottom: 23px;
+  line-height: 29px;
+  color: var(--black-color);
+  font-weight: 900;
+  font-size: 24px;
+  text-align: center;
+}

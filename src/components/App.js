@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import { api } from '../utils/api.js'
+import { auth } from '../utils/Auth.js'
 import { CurrentUserContext, user } from '../contexts/CurrentUserContext.js'
+import ProtectedRoute from './ProtectedRoute.js'
 import Header from './Header.js'
 import Main from './Main.js'
 import Footer from './Footer.js'
@@ -9,10 +12,16 @@ import ImagePopup from './ImagePopup.js'
 import EditAvatarPopup from './EditAvatarPopup.js'
 import EditProfilePopup from './EditProfilePopup.js'
 import AddPlacePopup from './AddPlacePopup.js'
+import InfoTooltip from './InfoTooltip.js'
+import Register from './Register.js'
+import Login from './Login.js'
 
 export const AppContext = React.createContext()
 
 function App() {
+  const navigate = useNavigate()
+  const [loggedIn, setLoggedIn] = React.useState(false)
+
   const [currentUser, setCurrentUser] = React.useState(user)
 
   React.useEffect(() => {
@@ -34,6 +43,29 @@ function App() {
       })
       .catch(console.error)
   }, [])
+
+  const [email, setEmail] = useState('')
+
+  function tokenCheck() {
+    if (localStorage.getItem('token')) {
+      const token = localStorage.getItem('token')
+
+      if (token) {
+        auth
+          .getData(token)
+          .then((res) => {
+            setEmail(res.data.email)
+            setLoggedIn(true)
+            navigate('/', { replace: true })
+          })
+          .catch(console.error)
+      }
+    }
+  }
+
+  React.useEffect(() => {
+    tokenCheck()
+  }, [loggedIn])
 
   function handleCardLike(card) {
     const isLiked = card.likes.some((item) => item._id === currentUser._id)
@@ -136,24 +168,72 @@ function App() {
 
   const [isLoading, setIsLoading] = React.useState(false)
 
+  function handleLogin() {
+    setLoggedIn(true)
+  }
+
+  function handleLogout() {
+    setLoggedIn(false)
+  }
+
+  const [infoStatus, setInfoStatus] = useState(false)
+  const [isInfoOpen, setIsInfoOpen] = useState(false)
+
+  function handleInfoClose() {
+    setIsInfoOpen(false)
+  }
+
+  const [loggedUser, setLoggedUser] = useState({ email: '', password: '' })
+  function handleLoggedUser(userEmail, userPassword) {
+    setLoggedUser((prev) => {
+      return {
+        ...prev,
+        email: userEmail,
+        password: userPassword,
+      }
+    })
+  }
+
   return (
     <AppContext.Provider value={{ isLoading, closeAllPopups }}>
       <CurrentUserContext.Provider value={currentUser}>
         <div className="App">
           <div className="container">
-            <Header />
+            <Header email={email} loggedIn={loggedIn} handleLogout={handleLogout} />
 
-            <Main
-              cards={cards}
-              onEditAvatar={handleEditAvatarClick}
-              onEditProfile={handleEditProfileClick}
-              onAddPlace={handleAddPlaceClick}
-              onCardClick={handleCardClick}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
-            />
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute
+                    component={Main}
+                    loggedIn={loggedIn}
+                    cards={cards}
+                    onEditAvatar={handleEditAvatarClick}
+                    onEditProfile={handleEditProfileClick}
+                    onAddPlace={handleAddPlaceClick}
+                    onCardClick={handleCardClick}
+                    onCardLike={handleCardLike}
+                    onCardDelete={handleCardDelete}
+                  />
+                }
+              />
+              <Route
+                path="/sign-up"
+                element={
+                  <Register
+                    onInfoStatus={setInfoStatus}
+                    onInfoOpen={setIsInfoOpen}
+                    onLoggedUser={handleLoggedUser}
+                  />
+                }
+              />
+              <Route path="/sign-in" element={<Login handleLogin={handleLogin} loggedUser={loggedUser} />} />
+            </Routes>
 
-            <Footer />
+            {loggedIn && <Footer />}
+
+            <InfoTooltip status={infoStatus} isOpen={isInfoOpen} onClose={handleInfoClose} />
 
             <EditAvatarPopup onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} />
 

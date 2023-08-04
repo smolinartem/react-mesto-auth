@@ -1,4 +1,5 @@
 import React from 'react'
+import Form from './Form'
 import { AppContext } from './App'
 import { usePopupClose } from '../hooks/usePopupClose'
 
@@ -17,12 +18,13 @@ function PopupWithForm({ onSubmit, isOpen, title, name, buttonText, children }) 
           aria-label="Кнопка закрыть."
         />
         <h2 className="popup__title">{title}</h2>
-        <form onSubmit={onSubmit} className="popup__form" name={`popup-${name}`}>
+        <Form onSubmit={onSubmit} buttonText={buttonText} children={children} name={name} />
+        {/*         <form onSubmit={onSubmit} className="popup__form" name={`popup-${name}`}>
           {children}
           <button className="popup__submit hover" type="submit">
             {buttonText}
           </button>
-        </form>
+        </form> */}
       </div>
     </section>
   )
