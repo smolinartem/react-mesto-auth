@@ -1,16 +1,12 @@
 import { useState } from 'react'
 import headerLogo from '../images/svg/logo.svg'
-import { Routes, Route, Link, useNavigate } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
 import burger from '../images/svg/burger.svg'
 import close from '../images/svg/burger-close.svg'
 
-function Header({ email, loggedIn, handleLogout }) {
-  const navigate = useNavigate()
-
-  function handleExit() {
-    localStorage.removeItem('token')
-    handleLogout()
-    navigate('/sign-in', { replace: true })
+function Header({ email, loggedIn, onSignOut }) {
+  function handleClick() {
+    onSignOut()
     setBurgerOpen(true)
   }
 
@@ -24,7 +20,7 @@ function Header({ email, loggedIn, handleLogout }) {
       {loggedIn && (
         <nav style={{ display: burgerOpen ? 'none' : 'flex' }} className="header__menu">
           <span className="header__email">{email}</span>
-          <button className="header__signout hover" onClick={handleExit}>
+          <button className="header__signout hover" onClick={handleClick}>
             Выйти
           </button>
         </nav>
@@ -55,7 +51,7 @@ function Header({ email, loggedIn, handleLogout }) {
           <>
             <nav className="header__nav">
               <span className="header__email">{email}</span>
-              <button className="header__signout hover" onClick={handleExit}>
+              <button className="header__signout hover" onClick={handleClick}>
                 Выйти
               </button>
             </nav>

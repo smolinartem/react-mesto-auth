@@ -1,10 +1,7 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useState } from 'react'
-import { auth } from '../utils/Auth.js'
 
-function Register({ onInfoStatus, onInfoOpen, onLoggedUser }) {
-  const navigate = useNavigate()
-
+function Register({ onRegister }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -13,19 +10,7 @@ function Register({ onInfoStatus, onInfoOpen, onLoggedUser }) {
     if (!email || !password) {
       return
     }
-    auth
-      .register(email, password)
-      .then((res) => {
-        onLoggedUser(email, password)
-        onInfoOpen(true)
-        onInfoStatus(true)
-        navigate('/sign-in', { replace: true })
-      })
-      .catch(() => {
-        console.error()
-        onInfoOpen(true)
-        onInfoStatus(false)
-      })
+    onRegister(email, password)
   }
 
   return (

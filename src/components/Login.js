@@ -1,28 +1,21 @@
 import { useState } from 'react'
-import { auth } from '../utils/Auth.js'
-import { useNavigate } from 'react-router-dom'
 
-function Login({ handleLogin, loggedUser }) {
-  const navigate = useNavigate()
-
+function Login({ onLogin, loggedUser }) {
   const [email, setEmail] = useState(loggedUser.email)
   const [password, setPassword] = useState(loggedUser.password)
 
   function handleSubmit(event) {
     event.preventDefault()
 
-    auth
-      .authorize(email, password)
-      .then((data) => {
-        if (data.token) {
-          setEmail('')
-          setPassword('')
-          handleLogin()
-          navigate('/', { replace: true })
-        }
-      })
-      .catch(console.error)
+    if (!email || !password) {
+      return
+    }
+    onLogin(email, password).then(() => {
+      setEmail('')
+      setPassword('')
+    })
   }
+
   return (
     <section className="authorization">
       <h2 className="authorization__title">Вход</h2>

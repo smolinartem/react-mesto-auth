@@ -33,13 +33,11 @@ class Auth {
     })
       .then(this._handleResponse)
       .then((data) => {
-        console.log(data)
         if (data.token) {
           localStorage.setItem('token', data.token)
           return data
         }
       })
-      .catch(console.error)
   }
 
   getData(token) {
