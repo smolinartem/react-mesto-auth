@@ -1,4 +1,4 @@
-const BASE_URL = 'https://auth.nomoreparties.co/'
+const BASE_URL = 'https://mesto.krutopognali.nomoredomainsrocks.ru/api'
 
 class Auth {
   constructor(url) {
@@ -14,7 +14,7 @@ class Auth {
   }
 
   register(email, password) {
-    return fetch(`${this._url}signup`, {
+    return fetch(`${this._url}/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -24,29 +24,28 @@ class Auth {
   }
 
   authorize(email, password) {
-    return fetch(`${this._url}signin`, {
+    return fetch(`${this._url}/signin`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, password }),
     })
       .then(this._handleResponse)
-      .then((data) => {
-        if (data.token) {
-          localStorage.setItem('token', data.token)
-          return data
-        }
-      })
   }
 
-  getData(token) {
-    return fetch(`${this._url}users/me`, {
+  getData() {
+    return fetch(`${this._url}/users/me`, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
+      credentials: 'include'
+    }).then(this._handleResponse)
+  }
+
+  signOut() {
+    return fetch(`${this._url}/signout`, {
+      method: 'GET',
+      credentials: 'include'
     }).then(this._handleResponse)
   }
 }

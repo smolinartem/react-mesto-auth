@@ -12,16 +12,10 @@ class Api {
     }
   }
 
-  getUserData() {
-    return fetch(`${this._url}/users/me`, {
-      method: 'GET',
-      headers: this._headers,
-    }).then(this._handleResponse)
-  }
-
   getInitialCards() {
     return fetch(`${this._url}/cards`, {
       method: 'GET',
+      credentials: 'include',
       headers: this._headers,
     }).then(this._handleResponse)
   }
@@ -30,6 +24,7 @@ class Api {
     return fetch(`${this._url}/users/me`, {
       method: 'PATCH',
       headers: this._headers,
+      credentials: 'include',
       body: JSON.stringify({
         name: values.name,
         about: values.job,
@@ -41,6 +36,7 @@ class Api {
     return fetch(`${this._url}/cards`, {
       method: 'POST',
       headers: this._headers,
+      credentials: 'include',
       body: JSON.stringify({
         name: values.name,
         link: values.link,
@@ -51,6 +47,7 @@ class Api {
   deleteCard(cardId) {
     return fetch(`${this._url}/cards/${cardId}`, {
       method: 'DELETE',
+      credentials: 'include',
       headers: this._headers,
     }).then(this._handleResponse)
   }
@@ -58,6 +55,7 @@ class Api {
   putLike(cardId) {
     return fetch(`${this._url}/cards/${cardId}/likes`, {
       method: 'PUT',
+      credentials: 'include',
       headers: this._headers,
     }).then(this._handleResponse)
   }
@@ -65,6 +63,7 @@ class Api {
   deleteLike(cardId) {
     return fetch(`${this._url}/cards/${cardId}/likes`, {
       method: 'DELETE',
+      credentials: 'include',
       headers: this._headers,
     }).then(this._handleResponse)
   }
@@ -73,6 +72,7 @@ class Api {
     return fetch(`${this._url}/users/me/avatar`, {
       method: 'PATCH',
       headers: this._headers,
+      credentials: 'include',
       body: JSON.stringify({
         avatar: data.avatar,
       }),
@@ -80,10 +80,10 @@ class Api {
   }
 }
 
+
 const serverConfig = {
-  url: 'https://nomoreparties.co/v1/cohort-68',
+  url: 'https://mesto.krutopognali.nomoredomainsrocks.ru/api',
   headers: {
-    authorization: 'ba426b9f-ef34-4346-9cd7-a3db6e837a2d',
     'Content-Type': 'application/json',
   },
 }

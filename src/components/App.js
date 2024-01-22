@@ -67,11 +67,9 @@ function App() {
   function handleLogin(email, password) {
     return auth
       .authorize(email, password)
-      .then((data) => {
-        if (data.token) {
-          setLoggedIn(true)
-          navigate('/', { replace: true })
-        }
+      .then(() => {
+        setLoggedIn(true)
+        navigate('/', { replace: true })
       })
       .catch(() => {
         console.error()
@@ -82,64 +80,55 @@ function App() {
   }
 
   function handleSignOut() {
-    localStorage.removeItem('token')
-    setLoggedIn(false)
-    navigate('/sign-in', { replace: true })
-  }
-
-  function tokenCheck() {
-    const token = localStorage.getItem('token')
-
-    if (token) {
-      auth
-        .getData(token)
-        .then((res) => {
-          setEmail(res.data.email)
-          setLoggedIn(true)
-          navigate('/', { replace: true })
-        })
-        .catch(console.error)
-    }
+    auth
+      .signOut()
+      .then(() => {
+        setLoggedIn(false)
+        navigate('/sign-in', { replace: true })
+      })
+      .catch(console.error)
   }
 
   useEffect(() => {
-    tokenCheck()
-  }, [loggedIn])
+    auth
+      .getData()
+      .then((res) => {
+        setCurrentUser(res.user)
+        setEmail(res.user.email)
+        setLoggedIn(true)
+        navigate('/', { replace: true })
+      })
+      .catch(console.error)
+
+    api
+      .getInitialCards()
+      .then((res) => {
+        setCards(res.cards)
+      })
+      .catch(console.error)
+  }, [loggedIn, navigate])
+
   //-----------------------------------------
 
-  useEffect(() => {
-    if (loggedIn) {
-      api
-        .getUserData()
-        .then((user) => {
-          setCurrentUser(user)
-        })
-        .catch(console.error)
-
-      api
-        .getInitialCards()
-        .then((initialCards) => {
-          setCards(initialCards)
-        })
-        .catch(console.error)
-    }
-  }, [loggedIn])
-
   function handleCardLike(card) {
-    const isLiked = card.likes.some((item) => item._id === currentUser._id)
+    const isLiked = card.likes.some((item) => item === currentUser._id)
 
     if (isLiked) {
       api
         .deleteLike(card._id)
-        .then((newCard) => {
-          setCards((prev) => prev.map((prevCard) => (prevCard._id === card._id ? newCard : prevCard)))
+        .then((res) => {
+          setCards((prev) =>
+            prev.map((prevCard) => (prevCard._id === card._id ? res.card : prevCard))
+          )
         })
         .catch(console.error)
     } else {
       api
         .putLike(card._id)
-        .then((newCard) => {
-          setCards((prev) => prev.map((prevCard) => (prevCard._id === card._id ? newCard : prevCard)))
+        .then((res) => {
+          setCards((prev) =>
+            prev.map((prevCard) => (prevCard._id === card._id ? res.card : prevCard))
+          )
         })
         .catch(console.error)
     }
@@ -183,9 +172,9 @@ function App() {
     setIsLoading(true)
     api
       .editUserInfo(userData)
-      .then((user) => {
+      .then((res) => {
         setCurrentUser((prev) => {
-          return { ...prev, name: user.name, about: user.about }
+          return { ...prev, name: res.user.name, about: res.user.about }
         })
         closeAllPopups()
       })
@@ -197,9 +186,9 @@ function App() {
     setIsLoading(true)
     api
       .setNewAvatar(avatar)
-      .then((user) => {
+      .then((res) => {
         setCurrentUser((prev) => {
-          return { ...prev, avatar: user.avatar }
+          return { ...prev, avatar: res.user.avatar }
         })
         closeAllPopups()
       })
@@ -211,8 +200,8 @@ function App() {
     setIsLoading(true)
     api
       .setNewCard(card)
-      .then((newCard) => {
-        setCards((prev) => [newCard, ...prev])
+      .then((res) => {
+        setCards((prev) => [res.card, ...prev])
         closeAllPopups()
       })
       .catch(console.error)
@@ -222,13 +211,13 @@ function App() {
   return (
     <AppContext.Provider value={{ isLoading, closeAllPopups }}>
       <CurrentUserContext.Provider value={currentUser}>
-        <div className="App">
-          <div className="container">
+        <div className='App'>
+          <div className='container'>
             <Header email={email} loggedIn={loggedIn} onSignOut={handleSignOut} />
 
             <Routes>
               <Route
-                path="/"
+                path='/'
                 element={
                   <ProtectedRoute
                     component={Main}
@@ -243,8 +232,11 @@ function App() {
                   />
                 }
               />
-              <Route path="/sign-up" element={<Register onRegister={handleRegister} />} />
-              <Route path="/sign-in" element={<Login onLogin={handleLogin} loggedUser={loggedUser} />} />
+              <Route path='/sign-up' element={<Register onRegister={handleRegister} />} />
+              <Route
+                path='/sign-in'
+                element={<Login onLogin={handleLogin} loggedUser={loggedUser} />}
+              />
             </Routes>
 
             {loggedIn && <Footer />}
@@ -257,7 +249,7 @@ function App() {
 
             <AddPlacePopup onAddPlaceSubmit={handleAddPlaceSubmit} isOpen={isAddPlacePopupOpen} />
 
-            <PopupWithForm title="Вы уверены?" name="confirmation" buttonText="Да" />
+            <PopupWithForm title='Вы уверены?' name='confirmation' buttonText='Да' />
 
             <ImagePopup onClose={closeAllPopups} card={selectedCard} />
           </div>
